@@ -27,16 +27,32 @@ app.post("/signup",async(req,res)=>{
 
 const data={
     name:req.body.name,
-    password:req.body.password 
-}
+    password:req.body.password,
+};
 
 await collection.insertMany([data])
 
-res.render("home.hbs")
+res.redirect("/home");
 
-})
+});
+
+app.post("/login",async(req,res)=>{
+    console.log(req.body);
+    try{
+        const check=await collection.findOne({name:req.body.name})
+        if (check.password===req.body.password){
+            res.render("home")
+        }
+        else{
+           res.send ("wrong password")
+        }
+    }
+    catch{
+        res.send("wrong details")
+    }
+});
 
 
-app.listen(3000,()=>{
+app.listen(4000,()=>{
     console.log("port connected.");
 })
